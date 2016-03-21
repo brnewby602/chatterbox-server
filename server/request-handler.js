@@ -13,6 +13,16 @@ this file and include it in basic-server.js so that it actually works.
 **************************************************************/
 
 var requestHandler = function(request, response) {
+
+  /* sample Get & Post responses:
+
+  data from GET: {"results":[{"createdAt":"2016-03-21T22:36:09.712Z","objectId":"EKp683R6Ut","roomname":"lobby","text":"asdf","updatedAt":"2016-03-21T22:36:09.712Z","username":"bob"}
+  
+  POST response:  
+  data = {"createdAt":"2016-03-21T22:41:25.530Z","objectId":"hBTSsm7P2H"}
+  app.js:132 chatterbox: Message sent
+  */
+
   // Request and Response come from node's http module.
   //
   // They include information about both the incoming request, such as
@@ -39,20 +49,25 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
+  // May need to be text/json or application/json
   headers['Content-Type'] = 'text/plain';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
+  // example args(200, {default})
   response.writeHead(statusCode, headers);
+
 
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
   // response.end() will be the body of the response - i.e. what shows
   // up in the browser.
   //
+
+  // response.data = data;
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end('Hello, World!');
+  response.end(JSON.stringify(data));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -70,4 +85,23 @@ var defaultCorsHeaders = {
   'access-control-allow-headers': 'content-type, accept',
   'access-control-max-age': 10 // Seconds.
 };
+
+var data = [
+  {'results': [
+      {'createdAt': '2016-03-21T22:36:09.712Z',
+       'objectId': 'EKp683R6Ut',
+       'roomname': 'lobby',
+       'text': 'asdf',
+       'updatedAt': '2016-03-21T22:36:09.712Z',
+       'username': 'bob'
+     } ]
+  }
+];
+
+
+
+module.exports = requestHandler;
+
+
+
 

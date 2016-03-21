@@ -1,4 +1,6 @@
 var app = {
+  // http://127.0.0.1:3000/
+  // may need port to be separate
   url: 'https://api.parse.com/1/classes',
   room: 'lobby',
   messages: [],
