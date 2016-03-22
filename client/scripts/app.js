@@ -30,7 +30,7 @@ var app = {
     app.fetch(false);
 
     // Poll for new messages
-    setInterval(app.fetch, 10000);
+    // setInterval(app.fetch, 10000);
   },
 
   send: function(data) {
@@ -59,7 +59,7 @@ var app = {
       url: app.server,
       type: 'GET',
       contentType: 'application/json',
-      data: { order: '-createdAt'},
+      //data: { order: '-createdAt'},
       success: function(data) {
         // Don't bother if we have nothing to work with
 

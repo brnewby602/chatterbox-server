@@ -14,21 +14,6 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 
-/* TO DO's
-  Create a createdAt and an objectId property when generating newChatObject
-    (May need to find a hashing function or make a really simple one.)
-  In POST, check if data successfully stored before sending 201
-  Make sure required fields are present when generating newChatObject
-
-  NOTE: There's sample JSON objects code at the bottom.
-*/
-/* Minor note on possible problem:
-(when we use qs.parse with GET if we ever do)
-strange error when I tried getting sinon - error from earlier
-npm WARN package.json querystring@0.2.0 querystring is also the name of a node core module.
-*/
-
-
 var requestHandler = function(request, response) {
 
   var headers = defaultCorsHeaders;
@@ -58,10 +43,9 @@ var requestHandler = function(request, response) {
       });
 
       request.on('end', function() {
-        
         response.writeHead(201, headers);
-        makeNewChatObject(requestBody);
-        response.end(JSON.stringify(''));
+        var thisObj = makeNewChatObject(requestBody);
+        response.end(JSON.stringify(thisObj));
       });
     } 
   } else if (request.method === 'OPTIONS') {
@@ -82,33 +66,26 @@ var defaultCorsHeaders = {
 };
 
 var chatData = 
-  {'results': [] };
+{'results': [] 
+};
+
 
 var makeNewChatObject = function(chatString) {
-
+  chatString = chatString || '';
+  var dateCreated = new Date();
   var chatObj = JSON.parse(chatString);
+  chatObj.createdAt = chatObj.updatedAt = dateCreated;
+  chatObj.objectId = simpleHash(chatObj.text);
   chatData.results.push(chatObj);
+
+  return chatObj;
+};
+
+var simpleHash = function(text) {
+
+  return Date.now();
 
 };
 
-/* Sample chat-message object
-*/
-// {'createdAt': '2016-03-21T22:36:09.712Z',
-//        'objectId': 'EKp683R6Ut',
-//        'roomname': 'lobby',
-//        'text': 'asdf',
-//        'updatedAt': '2016-03-21T22:36:09.712Z',
-//        'username': 'bob'
-//      }
-
-
-/* sample Get & Post responses:
-
-data from GET: {"results":[{"createdAt":"2016-03-21T22:36:09.712Z","objectId":"EKp683R6Ut","roomname":"lobby","text":"asdf","updatedAt":"2016-03-21T22:36:09.712Z","username":"bob"}
-
-POST response:  
-data = {"createdAt":"2016-03-21T22:41:25.530Z","objectId":"hBTSsm7P2H"}
-app.js:132 chatterbox: Message sent
-*/
 
 module.exports = requestHandler;
