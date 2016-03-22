@@ -56,10 +56,10 @@ var requestHandler = function(request, response) {
       });
       request.on('end', function() {
         // store the data first and send 201 only if successful
-
-        console.log('requestBody = ' + requestBody);
-
+        
         response.writeHead(201, headers);
+
+        makeNewChatObject(requestBody);
         // note: comes in stringified, so we have to use a parse - qs.parse?
         // write on the response object, it's all JSON for us
         // WE create a createdAt and an objectId property and return  
@@ -138,8 +138,10 @@ var defaultCorsHeaders = {
 var chatData = 
   {'results': [] };
 
-var makeNewChat = function() {
+var makeNewChatObject = function(chatString) {
 
+  var chatObj = JSON.parse(chatString);
+  chatData.results.push(chatObj);
 
 };
 
