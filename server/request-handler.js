@@ -12,27 +12,68 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 
-var requestHandler = function(request, response) {
+// TO DO: Investigate if querystring doesn't work
+// strange error when I tried getting sinon - not sinon related but one of the errors for an earlier...
+// npm WARN package.json querystring@0.2.0 querystring is also the name of a node core module.
 
+var requestHandler = function(request, response) {
+  
+
+  // The outgoing status.
+  var statusCode = 200;
+
+  // See the note below about CORS headers.
+  var headers = defaultCorsHeaders;
+
+  // Tell the client we are sending them plain text.
+  //
+  // You will need to change this if you are sending something
+  // other than plain text, like JSON or HTML.
+  // May need to be text/json or application/json
+  headers['Content-Type'] = 'text/plain';
+
+  // .writeHead() writes to the request line and headers of the response,
+  // which includes the status and all headers.
+  // example args(200, {default})
+  //response.writeHead(statusCode, headers);
+
+
+
+ 
   if (request.method === 'GET') {
-    if (request.url === '') {
+    if (request.url === '/classes/messages') {
       // do our thing
+      response.writeHead(statusCode, headers);
+      response.end(JSON.stringify(chatData));
     }
   } else if (request.method === 'POST') {
-    if (request.url === '/messages') {
+    if (request.url === '/classes/messages') {
       var requestBody = '';
+
+
       request.on('data', function(data) {
         requestBody += data;
       });
       request.on('end', function() {
+        // store the data first and send 201 only if successful
+
+        console.log('requestBody = ' + requestBody);
+
+        response.writeHead(201, headers);
         // note: comes in stringified, so we have to use a parse - qs.parse?
         // write on the response object, it's all JSON for us
         // WE create a createdAt and an objectId property and return  
         // We might need to find a hashing function or make a really simple one
+        response.end();
       });
     } else {
       response.writeHead(404, 'Our custom 404!', {'Content-Type': 'text/plain'});
     }
+  } else if (request.method === 'OPTIONS') {
+    // just return a 200 response with the allowed header
+    response.writeHead(statusCode, headers);
+    response.end();
+
   } else {
     response.writeHead(405, 'Method not supported', {'Content-Type': 'text/plain'});
   }
@@ -64,23 +105,6 @@ var requestHandler = function(request, response) {
 
   console.dir(request);
 
-  // The outgoing status.
-  var statusCode = 200;
-
-  // See the note below about CORS headers.
-  var headers = defaultCorsHeaders;
-
-  // Tell the client we are sending them plain text.
-  //
-  // You will need to change this if you are sending something
-  // other than plain text, like JSON or HTML.
-  // May need to be text/json or application/json
-  headers['Content-Type'] = 'text/plain';
-
-  // .writeHead() writes to the request line and headers of the response,
-  // which includes the status and all headers.
-  // example args(200, {default})
-  response.writeHead(statusCode, headers);
 
 
   // Make sure to always call response.end() - Node may not send
@@ -92,7 +116,7 @@ var requestHandler = function(request, response) {
   // response.data = data;
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end(JSON.stringify(chatData));
+  //response.end(JSON.stringify(chatData));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -111,18 +135,22 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
-var chatData = [
-  {'results': [
-      {'createdAt': '2016-03-21T22:36:09.712Z',
-       'objectId': 'EKp683R6Ut',
-       'roomname': 'lobby',
-       'text': 'asdf',
-       'updatedAt': '2016-03-21T22:36:09.712Z',
-       'username': 'bob'
-     } ]
-  }
-];
+var chatData = 
+  {'results': [] };
 
+var makeNewChat = function() {
+
+
+};
+
+
+// {'createdAt': '2016-03-21T22:36:09.712Z',
+//        'objectId': 'EKp683R6Ut',
+//        'roomname': 'lobby',
+//        'text': 'asdf',
+//        'updatedAt': '2016-03-21T22:36:09.712Z',
+//        'username': 'bob'
+//      }
 
 
 module.exports = requestHandler;

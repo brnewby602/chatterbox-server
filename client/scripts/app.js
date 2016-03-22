@@ -1,7 +1,7 @@
 var app = {
   // http://127.0.0.1:3000/
   // may need port to be separate
-  url: 'http://127.0.0.1:3000/',
+  url: 'http://127.0.0.1:3000/classes',
   room: 'lobby',
   messages: [],
   friends: []
