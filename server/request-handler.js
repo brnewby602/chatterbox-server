@@ -1,3 +1,5 @@
+var url = require('url');
+
 /*************************************************************
 
 You should implement your request handler function in this file.
@@ -33,10 +35,12 @@ var requestHandler = function(request, response) {
 
   headers['Content-Type'] = 'text/json'; // just changed from text/plain
 
+  var urlObj = url.parse(request.url, true);
+  var path = urlObj.pathname;
 
   /* Routing based on http method and URL
   */
-  if (request.url !== '/classes/messages') {
+  if (path !== '/classes/messages') {
     response.writeHead(404, 'Our custom 404!', {'Content-Type': 'text/plain'});
     response.end();
   }
@@ -46,7 +50,7 @@ var requestHandler = function(request, response) {
       response.end(JSON.stringify(chatData));
     }
   } else if (request.method === 'POST') {
-    if (request.url === '/classes/messages') {
+    if (path === '/classes/messages') {
       var requestBody = '';
 
       request.on('data', function(data) {
@@ -57,7 +61,7 @@ var requestHandler = function(request, response) {
         
         response.writeHead(201, headers);
         makeNewChatObject(requestBody);
-        response.end();
+        response.end(JSON.stringify(''));
       });
     } 
   } else if (request.method === 'OPTIONS') {
