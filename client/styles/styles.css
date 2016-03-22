@@ -5,13 +5,8 @@ body {
     font-family: arial, sans-serif;
 }
 
-#container {
-    width: 500px;
-    margin: auto;
-    box-shadow: 0px 0px 20px 5px #000;
-}
-
 #main, #chats {
+    width: 500px;
     margin: auto;
     text-align: left;
     background: white;
@@ -51,51 +46,7 @@ body {
     line-height: 13px;
 }
 
-#chats .message {
-    background: #eee;
-    margin: 5px 0;
-    padding: 10px;
-}
-
-
-#main ul {
-    list-style: none;
-    padding:0;
-    margin: 0 0 15px 0;
-}
-
-/* OUR CSS */
-
-li {
-    float: left;
-    padding: 5px;
-    margin:3px 3px 0 0;
-    background: #777;
-    color: white;
-}
-
-.clearfix:after {
-     visibility: hidden;
-     display: block;
-     font-size: 0;
-     content: " ";
-     clear: both;
-     height: 0;
-     }
-.clearfix { display: inline-block; }
-/* start commented backslash hack \*/
-* html .clearfix { height: 1%; }
-.clearfix { display: block; }
-/* close commented backslash hack */
-
-.friend {
-    color: teal;
-}
-
-/* END OF OUR CSS */
-
 form {
-  
     padding: 20px;
     padding-left: 0;
     margin-bottom: 20px;
@@ -123,10 +74,9 @@ form input[type=text] {
 }
 
 .spinner {
-    text-align: center;
+    float: right;
     height: 46px;
     margin-bottom: 5px;
-    display: none;
 }
 
 .spinner img {
