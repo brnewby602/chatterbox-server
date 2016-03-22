@@ -38,7 +38,10 @@ var requestHandler = function(request, response) {
   //response.writeHead(statusCode, headers);
 
 
-
+  if (request.url !== '/classes/messages') {
+    response.writeHead(404, 'Our custom 404!', {'Content-Type': 'text/plain'});
+    response.end();
+  }
  
   if (request.method === 'GET') {
     if (request.url === '/classes/messages') {
@@ -66,9 +69,9 @@ var requestHandler = function(request, response) {
         // We might need to find a hashing function or make a really simple one
         response.end();
       });
-    } else {
-      response.writeHead(404, 'Our custom 404!', {'Content-Type': 'text/plain'});
-    }
+    } // else {
+    //   response.writeHead(404, 'Our custom 404!', {'Content-Type': 'text/plain'});
+    // }
   } else if (request.method === 'OPTIONS') {
     // just return a 200 response with the allowed header
     response.writeHead(statusCode, headers);
