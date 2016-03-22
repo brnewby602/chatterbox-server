@@ -14,6 +14,29 @@ this file and include it in basic-server.js so that it actually works.
 
 var requestHandler = function(request, response) {
 
+  if (request.method === 'GET') {
+    if (request.url === '') {
+      // do our thing
+    }
+  } else if (request.method === 'POST') {
+    if (request.url === '/messages') {
+      var requestBody = '';
+      request.on('data', function(data) {
+        requestBody += data;
+      });
+      request.on('end', function() {
+        // note: comes in stringified, so we have to use a parse - qs.parse?
+        // write on the response object, it's all JSON for us
+        // WE create a createdAt and an objectId property and return  
+        // We might need to find a hashing function or make a really simple one
+      });
+    } else {
+      response.writeHead(404, 'Our custom 404!', {'Content-Type': 'text/plain'});
+    }
+  } else {
+    response.writeHead(405, 'Method not supported', {'Content-Type': 'text/plain'});
+  }
+
   /* sample Get & Post responses:
 
   data from GET: {"results":[{"createdAt":"2016-03-21T22:36:09.712Z","objectId":"EKp683R6Ut","roomname":"lobby","text":"asdf","updatedAt":"2016-03-21T22:36:09.712Z","username":"bob"}
@@ -38,6 +61,8 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
+
+  console.dir(request);
 
   // The outgoing status.
   var statusCode = 200;
@@ -67,7 +92,7 @@ var requestHandler = function(request, response) {
   // response.data = data;
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end(JSON.stringify(data));
+  response.end(JSON.stringify(chatData));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -86,7 +111,7 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
-var data = [
+var chatData = [
   {'results': [
       {'createdAt': '2016-03-21T22:36:09.712Z',
        'objectId': 'EKp683R6Ut',
