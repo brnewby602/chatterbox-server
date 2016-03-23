@@ -3,7 +3,7 @@ var http = require('http');
 var handleRequest = require('./request-handler');
 // TODO: we may need to move this to request-handler.js
 var querystring = require('querystring');  
-
+var fs = require('fs');
 // Every server needs to listen on a port with a unique number. The
 // standard port for HTTP servers is port 80, but that port is
 // normally already claimed by another server and/or not accessible
@@ -18,7 +18,13 @@ var ip = '127.0.0.1';
 
 
 
- 
+// create chats storage file on initial server load
+fs.appendFile('/tmp/chatdata.txt', '', function(err) {
+  if (err) {
+    console.log(err);
+  }
+}); 
+
 
 
 

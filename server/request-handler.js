@@ -1,4 +1,5 @@
 var url = require('url');
+var fs = require('fs');
 
 /*************************************************************
 
@@ -13,6 +14,8 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+
+
 
 var requestHandler = function(request, response) {
 
@@ -77,6 +80,12 @@ var makeNewChatObject = function(chatString) {
   chatObj.createdAt = chatObj.updatedAt = dateCreated;
   chatObj.objectId = simpleHash(chatObj.text);
   chatData.results.push(chatObj);
+  // new write-to-a-file code
+  fs.appendFile('/tmp/chatdata.txt', JSON.stringify(chatObj) + '|', function(err) {
+    if (err) {
+      console.log(err);
+    }
+  }); 
 
   return chatObj;
 };
